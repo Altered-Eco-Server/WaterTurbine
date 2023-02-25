@@ -49,14 +49,14 @@ namespace Eco.Mods.TechTree
     {
         [Serialized] public bool Spinning = true;
         public override LocString DisplayName { get { return Localizer.DoStr("Water Turbine"); } }
-        public override TableTextureMode TableTexture => TableTextureMode.Wood;
+        public override TableTextureMode TableTexture => TableTextureMode.Metal;
         public virtual Type RepresentedItemType { get { return typeof(WaterTurbineItem); } }
 
         protected override void Initialize()
         {
             this.ModsPreInitialize();
             this.GetComponent<PowerGridComponent>().Initialize(30, new ElectricPower());
-            this.GetComponent<PowerGeneratorComponent>().Initialize(2000);
+            this.GetComponent<PowerGeneratorComponent>().Initialize(750);
             this.ModsPostInitialize();
         }
 
@@ -86,10 +86,10 @@ namespace Eco.Mods.TechTree
             TypeForRoomLimit = Localizer.DoStr(""),
         };
 
-        [Tooltip(8)] private LocString PowerProductionTooltip => Localizer.Do($"Produces: {Text.Info(1000)}w of {new ElectricPower().Name} power");
+        [Tooltip(8)] private LocString PowerProductionTooltip => Localizer.Do($"Produces: {Text.Info(750)}w of {new ElectricPower().Name} power");
     }
 
-    [RequiresSkill(typeof(MechanicsSkill), 6)]
+    [RequiresSkill(typeof(IndustrySkill), 5)]
     public partial class WaterTurbineRecipe : RecipeFamily
     {
         public WaterTurbineRecipe()
@@ -100,10 +100,10 @@ namespace Eco.Mods.TechTree
                 Localizer.DoStr("Water Turbine"),
                 new List<IngredientElement>
                 {
-                    new IngredientElement(typeof(IronPlateItem), 30, typeof(MechanicsSkill), typeof(MechanicsLavishResourcesTalent)),
-                    new IngredientElement(typeof(IronGearItem), 20, typeof(MechanicsSkill), typeof(MechanicsLavishResourcesTalent)),
-                    new IngredientElement(typeof(IronAxleItem), 2, true),
-                    new IngredientElement("Lumber", 15, typeof(MechanicsSkill), typeof(MechanicsLavishResourcesTalent)),
+                    new IngredientElement(typeof(SteelPlateItem), 30, typeof(IndustrySkill), typeof(IndustryLavishResourcesTalent)),
+                    new IngredientElement(typeof(SteelGearItem), 20, typeof(IndustrySkill), typeof(IndustryLavishResourcesTalent)),
+                    new IngredientElement(typeof(SteelAxleItem), 2, true),
+                    new IngredientElement("Lumber", 15, typeof(IndustrySkill), typeof(IndustryLavishResourcesTalent)),
                 },
                 new List<CraftingElement>
                 {
@@ -111,12 +111,12 @@ namespace Eco.Mods.TechTree
                 });
             this.Recipes = new List<Recipe> { recipe };
             this.ExperienceOnCraft = 30;
-            this.LaborInCalories = CreateLaborInCaloriesValue(800, typeof(MechanicsSkill));
-            this.CraftMinutes = CreateCraftTimeValue(typeof(WaterTurbineRecipe), 12, typeof(MechanicsSkill), typeof(MechanicsFocusedSpeedTalent), typeof(MechanicsParallelSpeedTalent));
+            this.LaborInCalories = CreateLaborInCaloriesValue(800, typeof(IndustrySkill));
+            this.CraftMinutes = CreateCraftTimeValue(typeof(WaterTurbineRecipe), 12, typeof(IndustrySkill), typeof(IndustryFocusedSpeedTalent), typeof(IndustryParallelSpeedTalent));
             this.ModsPreInitialize();
             this.Initialize(Localizer.DoStr("Water Turbine"), typeof(WaterTurbineRecipe));
             this.ModsPostInitialize();
-            CraftingComponent.AddRecipe(typeof(AssemblyLineObject), this);
+            CraftingComponent.AddRecipe(typeof(RoboticAssemblyLineObject), this);
         }
 
         /// <summary>Hook for mods to customize RecipeFamily before initialization. You can change recipes, xp, labor, time here.</summary>
